@@ -25,7 +25,7 @@ class _CalculatorHomeState extends State<CalculatorHome> {
   void _onButtonPressed(String value) {
     setState(() {
       if (value == 'C') {
-        _clear(); // Chama a função de limpar a tela
+        _clear();
       } else if (value == '=') {
         try {
           Parser p = Parser();
@@ -37,14 +37,12 @@ class _CalculatorHomeState extends State<CalculatorHome> {
         }
       } else {
         if (expression.isEmpty && '+-*/'.contains(value)) {
-          // Não adicionar operador sem dígito
           return;
         }
         expression += value;
       }
     });
   }
-
 
   void _clear() {
     setState(() {
@@ -54,12 +52,30 @@ class _CalculatorHomeState extends State<CalculatorHome> {
   }
 
   Widget _buildButton(String value) {
+    Color? buttonColor;
+    Color textColor = Colors.white; 
+
+    if (value == 'C') {
+      buttonColor = Colors.grey[300]; 
+      textColor = Colors.grey[800]!; 
+    } else if ('+-*/='.contains(value)) {
+      buttonColor = Colors.cyan; 
+    } else {
+      buttonColor = Colors.grey[800]; 
+    }
+
     return Expanded(
-      child: ElevatedButton(
-        onPressed: () => _onButtonPressed(value),
-        child: Text(
-          value,
-          style: TextStyle(fontSize: 24),
+      child: Container(
+        margin: EdgeInsets.all(4), 
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: buttonColor, 
+          ),
+          onPressed: () => _onButtonPressed(value),
+          child: Text(
+            value,
+            style: TextStyle(fontSize: 24, color: textColor), 
+          ),
         ),
       ),
     );
@@ -68,63 +84,81 @@ class _CalculatorHomeState extends State<CalculatorHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Calculadora')),
-      body: Column(
-        children: [
-          Expanded(
-            child: Container(
-              padding: EdgeInsets.all(16),
-              alignment: Alignment.bottomRight,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    expression,
-                    style: TextStyle(fontSize: 32),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    result,
-                    style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold),
-                  ),
-                ],
+      backgroundColor: Colors.black, // Fundo do Scaffold
+      appBar: AppBar(
+        title: Text('Calculadora'),
+        backgroundColor: Colors.grey[900], 
+        titleTextStyle: TextStyle(
+          color: Colors.white, 
+          fontSize: 20,        
+        ),
+      ),
+
+      body: Padding(
+        padding: EdgeInsets.all(16), 
+        child: Column(
+          children: [
+            Expanded(
+              child: Container(
+                color: Colors.black, 
+                padding: EdgeInsets.all(16),
+                alignment: Alignment.bottomRight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      expression,
+                      style: TextStyle(fontSize: 32, color: Colors.white),
+                    ),
+                    SizedBox(height: 16),
+                    Text(
+                      result,
+                      style: TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: Colors.white), // Cor do resultado
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Row(
-            children: [
-              _buildButton('7'),
-              _buildButton('8'),
-              _buildButton('9'),
-              _buildButton('/'),
-            ],
-          ),
-          Row(
-            children: [
-              _buildButton('4'),
-              _buildButton('5'),
-              _buildButton('6'),
-              _buildButton('*'),
-            ],
-          ),
-          Row(
-            children: [
-              _buildButton('1'),
-              _buildButton('2'),
-              _buildButton('3'),
-              _buildButton('-'),
-            ],
-          ),
-          Row(
-            children: [
-              _buildButton('0'),
-              _buildButton('C'), // Limpar
-              _buildButton('='),
-              _buildButton('+'),
-            ],
-          ),
-        ],
+            SizedBox(height: 16), 
+            Column(
+              children: [
+                Row(
+                  children: [
+                    _buildButton('7'),
+                    _buildButton('8'),
+                    _buildButton('9'),
+                    _buildButton('/'),
+                  ],
+                ),
+                Row(
+                  children: [
+                    _buildButton('4'),
+                    _buildButton('5'),
+                    _buildButton('6'),
+                    _buildButton('*'),
+                  ],
+                ),
+                Row(
+                  children: [
+                    _buildButton('1'),
+                    _buildButton('2'),
+                    _buildButton('3'),
+                    _buildButton('-'),
+                  ],
+                ),
+                Row(
+                  children: [
+                    _buildButton('0'),
+                    _buildButton('C'),
+                    _buildButton('='),
+                    _buildButton('+'),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
