@@ -24,7 +24,9 @@ class _CalculatorHomeState extends State<CalculatorHome> {
 
   void _onButtonPressed(String value) {
     setState(() {
-      if (value == '=') {
+      if (value == 'C') {
+        _clear(); // Chama a função de limpar a tela
+      } else if (value == '=') {
         try {
           Parser p = Parser();
           Expression exp = p.parse(expression);
@@ -42,6 +44,7 @@ class _CalculatorHomeState extends State<CalculatorHome> {
       }
     });
   }
+
 
   void _clear() {
     setState(() {
